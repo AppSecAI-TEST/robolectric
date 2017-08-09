@@ -4,8 +4,9 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 import android.net.http.AndroidHttpClient;
 import android.os.Build;
-
 import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.Strings;
+
 
 @RunWith(RobolectricTestRunner.class)
 @Config(maxSdk = Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -37,6 +39,8 @@ public class AndroidHttpClientTest {
     FakeHttp.addPendingHttpResponse(200, "foo");
     HttpResponse resp = client.execute(new HttpGet("/foo"));
     assertThat(resp.getStatusLine().getStatusCode()).isEqualTo(200);
-    assertThat(Strings.fromStream(resp.getEntity().getContent())).isEqualTo("foo");
+    assertThat(
+      .toString(new InputStreamReader(resp.getEntity().getContent())))
+        .isEqualTo("foo");
   }
 }
